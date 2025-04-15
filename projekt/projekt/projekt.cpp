@@ -3,16 +3,14 @@
 using namespace std;
 using namespace chrono;
 
-// Mierzy czas wykonania funkcji
 template <typename Funkcja>
 long long zmierz_czas(Funkcja f) {
     auto start = high_resolution_clock::now();
     f();
     auto koniec = high_resolution_clock::now();
-    return duration_cast<milliseconds>(koniec - start).count();
+    return duration_cast<microseconds>(koniec - start).count(); 
 }
 
-// Dodaj na początek tablicy dynamicznej
 void dodaj_do_tablicy_na_poczatek(int*& tablica, int& rozmiar, int& pojemnosc, int wartosc) {
     if (rozmiar == pojemnosc) {
         pojemnosc *= 2;
@@ -32,7 +30,6 @@ void dodaj_do_tablicy_na_poczatek(int*& tablica, int& rozmiar, int& pojemnosc, i
     }
 }
 
-// Dodaj na koniec tablicy
 void dodaj_do_tablicy_na_koniec(int*& tablica, int& rozmiar, int& pojemnosc, int wartosc) {
     if (rozmiar == pojemnosc) {
         pojemnosc *= 2;
@@ -45,7 +42,6 @@ void dodaj_do_tablicy_na_koniec(int*& tablica, int& rozmiar, int& pojemnosc, int
     tablica[rozmiar++] = wartosc;
 }
 
-// Dodaj na wybrany indeks tablicy (jeśli za duży → dodaje na koniec)
 void dodaj_do_tablicy_na_indeks(int*& tablica, int& rozmiar, int& pojemnosc, int wartosc, int indeks) {
     if (indeks < 0) return;
     if (indeks > rozmiar) indeks = rozmiar;
@@ -69,7 +65,6 @@ void dodaj_do_tablicy_na_indeks(int*& tablica, int& rozmiar, int& pojemnosc, int
     ++rozmiar;
 }
 
-// Usuwanie z początku tablicy
 void usun_poczatek_tablicy(int*& tablica, int& rozmiar) {
     if (rozmiar > 0) {
         for (int i = 1; i < rozmiar; ++i)
@@ -78,14 +73,12 @@ void usun_poczatek_tablicy(int*& tablica, int& rozmiar) {
     }
 }
 
-// Usuwanie z końca tablicy
 void usun_koniec_tablicy(int*& tablica, int& rozmiar) {
     if (rozmiar > 0) {
         --rozmiar;
     }
 }
 
-// Usuwanie z indeksu tablicy
 void usun_indeks_tablicy(int*& tablica, int& rozmiar, int indeks) {
     if (indeks < 0 || indeks >= rozmiar) return;
     for (int i = indeks + 1; i < rozmiar; ++i)
@@ -93,21 +86,18 @@ void usun_indeks_tablicy(int*& tablica, int& rozmiar, int indeks) {
     --rozmiar;
 }
 
-// Węzeł listy jednokierunkowej
 struct Wezel {
     int wartosc;
     Wezel* nastepny;
     Wezel(int w) : wartosc(w), nastepny(nullptr) {}
 };
 
-// Dodaj na początek listy
 void dodaj_do_listy_na_poczatek(Wezel*& pierwszy_el, int wartosc) {
     Wezel* nowy = new Wezel(wartosc);
     nowy->nastepny = pierwszy_el;
     pierwszy_el = nowy;
 }
 
-// Dodaj na koniec listy
 void dodaj_do_listy_na_koniec(Wezel*& pierwszy_el, int wartosc) {
     Wezel* nowy = new Wezel(wartosc);
     if (!pierwszy_el) {
@@ -120,7 +110,6 @@ void dodaj_do_listy_na_koniec(Wezel*& pierwszy_el, int wartosc) {
     temp->nastepny = nowy;
 }
 
-// Dodaj na wybrany indeks listy (jeśli za duży → dodaje na koniec)
 void dodaj_do_listy_na_indeks(Wezel*& pierwszy_el, int wartosc, int indeks) {
     if (indeks < 0) return;
 
@@ -147,7 +136,6 @@ void dodaj_do_listy_na_indeks(Wezel*& pierwszy_el, int wartosc, int indeks) {
     temp->nastepny = nowy;
 }
 
-// Usuwanie z początku listy
 void usun_poczatek_listy(Wezel*& pierwszy_el) {
     if (pierwszy_el) {
         Wezel* temp = pierwszy_el;
@@ -156,7 +144,6 @@ void usun_poczatek_listy(Wezel*& pierwszy_el) {
     }
 }
 
-// Usuwanie z końca listy
 void usun_koniec_listy(Wezel*& pierwszy_el) {
     if (!pierwszy_el) return;
 
@@ -175,7 +162,6 @@ void usun_koniec_listy(Wezel*& pierwszy_el) {
     delete do_usuniecia;
 }
 
-// Usuwanie z indeksu listy
 void usun_indeks_listy(Wezel*& pierwszy_el, int indeks) {
     if (indeks < 0) return;
 
@@ -199,7 +185,6 @@ void usun_indeks_listy(Wezel*& pierwszy_el, int indeks) {
     delete do_usuniecia;
 }
 
-// Wyszukiwanie elementu w tablicy
 int znajdz_w_tablicy(int* tablica, int rozmiar, int szukana_wartosc) {
     if (tablica == nullptr || rozmiar <= 0) return -1;
 
@@ -210,7 +195,6 @@ int znajdz_w_tablicy(int* tablica, int rozmiar, int szukana_wartosc) {
     return -1;
 }
 
-// Wyszukiwanie elementu w liście
 int znajdz_w_liscie(Wezel* pierwszy_el, int szukana_wartosc) {
     int indeks = 0;
     while (pierwszy_el) {
@@ -223,7 +207,7 @@ int znajdz_w_liscie(Wezel* pierwszy_el, int szukana_wartosc) {
 }
 
 int main() {
-    const int N = 20000;
+    const int N = 50000;
 
     int pojemnosc_tablicy = 40;
     int rozmiar_tablicy = 0;
@@ -231,71 +215,73 @@ int main() {
 
     Wezel* lista = nullptr;
 
+    cout << "Liczba elementow: 50000\n \n";
+
     cout << "Dodawanie na poczatek:\n";
     cout << "Tablica: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             dodaj_do_tablicy_na_poczatek(tablica, rozmiar_tablicy, pojemnosc_tablicy, i);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "Lista: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             dodaj_do_listy_na_poczatek(lista, i);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "\nDodawanie na koniec:\n";
     cout << "Tablica: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             dodaj_do_tablicy_na_koniec(tablica, rozmiar_tablicy, pojemnosc_tablicy, i);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "Lista: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             dodaj_do_listy_na_koniec(lista, i);
-        }) << " ms\n";
+        }) << " us\n";
 
-    cout << "\nDodawanie na wybrany indeks (srodek):\n";
+    cout << "\nDodawanie na wybrany indeks:\n";
     cout << "Tablica: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             dodaj_do_tablicy_na_indeks(tablica, rozmiar_tablicy, pojemnosc_tablicy, i, rozmiar_tablicy / 2);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "Lista: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             dodaj_do_listy_na_indeks(lista, i, i / 2);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "\nUsuwanie z poczatku:\n";
     cout << "Tablica: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             usun_poczatek_tablicy(tablica, rozmiar_tablicy);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "Lista: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             usun_poczatek_listy(lista);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "\nUsuwanie z konca:\n";
     cout << "Tablica: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             usun_koniec_tablicy(tablica, rozmiar_tablicy);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "Lista: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             usun_koniec_listy(lista);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "\nUsuwanie z wybranego indeksu:\n";
     cout << "Tablica: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             usun_indeks_tablicy(tablica, rozmiar_tablicy, i / 2);
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "Lista: " << zmierz_czas([&]() {
         for (int i = 0; i < N; ++i)
             usun_indeks_listy(lista, i / 2);
-        }) << " ms\n";
+        }) << " us\n";
 
     int szukana;
     cout << "\nPodaj wartosc do wyszukania: ";
@@ -306,15 +292,15 @@ int main() {
     cout << "Tablica: " << zmierz_czas([&]() {
         int indeks = znajdz_w_tablicy(tablica, rozmiar_tablicy, szukana);
         cout << "Znaleziono na indeksie: " << indeks << endl;
-        }) << " ms\n";
+        }) << " us\n";
 
     cout << "Lista: " << zmierz_czas([&]() {
         int indeks = znajdz_w_liscie(lista, szukana);
         cout << "Znaleziono na indeksie: " << indeks << endl;
-        }) << " ms\n";
+        }) << " us\n";
 
+    system("python C:\\Users\\Dell\\Desktop\\studia\\sem3\\struktury_danych\\struktury_danych_projekt\\projekt\\projekt\\wykresy.py");
 
-    // Usuwanie pamięci na koniec
     delete[] tablica;
     while (lista) {
         Wezel* temp = lista;
